@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swagging & Doming Production Time Calculator</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+      <!-- Header -->
+      <header class="mb-8 text-center">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a
+                  class="nav-link"
+                  href="https://samantha-web.github.io/navigationhub/"
+                  >Back to Home <span class="sr-only">(current)</span></a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="https://samantha-web.github.io/timecaltube/"
+                  >Cutting</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://samantha-web.github.io/t4/"
+                  >T4</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link disabled"
+                  href="https://samantha-web.github.io/t6/"
+                  >T6</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <h1 class="text-4xl font-extrabold text-blue-800 mb-2">
+          Swagging & Doming Production Time Calculator
+        </h1>
+        <p class="text-gray-600">
+          Easily plan, calculate, and summarize your manufacturing schedule.
+        </p>
+      </header>
+
+      <!-- Controls -->
+      <section
+        class="bg-white rounded-lg shadow p-6 mb-8 flex flex-wrap items-center gap-4"
+      >
+        <div class="flex items-center gap-2">
+          <label for="orderQty" class="font-medium">Order Qty</label>
+          <input
+            type="number"
+            id="orderQty"
+            class="border border-gray-300 p-2 rounded w-24 focus:ring focus:ring-blue-200"
+            min="0"
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          <label for="workingHours" class="font-medium"
+            >Working Hours/Day</label
+          >
+          <select id="workingHours" class="border border-gray-300 p-2 rounded">
+            <option value="8">08 Hours</option>
+            <option value="10">10 Hours</option>
+            <option value="12">12 Hours</option>
+            <option value="14">14 Hours</option>
+            <option value="16">16 Hours</option>
+            <option value="18">18 Hours</option>
+            <option value="20">20 Hours</option>
+            <option value="22">22 Hours</option>
+            <option value="24">24 Hours</option>
+          </select>
+        </div>
+        <button
+          id="resetButton"
+          class="ml-auto bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition"
+        >
+          Reset All
+        </button>
+      </section>
+
+      <!-- Production Table -->
+      <section class="mb-10">
+        <div class="overflow-x-auto bg-white rounded-lg shadow">
+          <table
+            id="productionTable"
+            class="min-w-full divide-y divide-gray-300"
+          >
+            <thead class="bg-blue-100 sticky top-0 z-10">
+              <tr>
+                <th class="py-3 px-4 text-left">S/No</th>
+                <th class="py-3 px-4 text-left">M/C No.</th>
+                <th class="py-3 px-4 text-left">Mould No.</th>
+                <th class="py-3 px-4 text-left">M/C Function</th>
+                <th class="py-3 px-4 text-left">Part of Frame</th>
+                <th class="py-3 px-4 text-left">Items to Do</th>
+                <th class="py-3 px-4 text-left">Description</th>
+                <th class="py-3 px-4 text-left">Qty (Set)</th>
+                <th class="py-3 px-4 text-left">Capacity/hr</th>
+                <th class="py-3 px-4 text-left">Qty</th>
+                <th class="py-3 px-4 text-left">Total Hours</th>
+                <th class="py-3 px-4 text-left">Days</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm bg-white">
+              <tr>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4">WTH-A15-01</td>
+                <td class="py-3 px-4">WTH-A15-01-002</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">CS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">22.2TP14-180L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">90</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">2</td>
+                <td class="py-3 px-4">WTH-A15-01</td>
+                <td class="py-3 px-4">WTH-A15-01-007</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">CS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">25.4TP19-160L, 22.2TP14-160L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">144</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">3</td>
+                <td class="py-3 px-4">WTH-A15-01</td>
+                <td class="py-3 px-4">WTH-A15-01-001</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">SS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">19.1TP13-155L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">360</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">4</td>
+                <td class="py-3 px-4">WTH-A15-01</td>
+                <td class="py-3 px-4">WTH-A15-01-003</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">SS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">22.2TP19-160L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">144</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">5</td>
+                <td class="py-3 px-4">WTH-A15-01</td>
+                <td class="py-3 px-4">WTH-A15-01-005</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">SS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">16TP13-130L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">450</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">6</td>
+                <td class="py-3 px-4">WTH-A15-01</td>
+                <td class="py-3 px-4">WTH-A15-01-006</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">SS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">22.2TP16(20L)-60L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">360</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">7</td>
+                <td class="py-3 px-4">WTH-A15-04</td>
+                <td class="py-3 px-4">WTH-A15-04-002</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">TT</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">44TP30-410L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">102</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">8</td>
+                <td class="py-3 px-4">WTH-A15-04</td>
+                <td class="py-3 px-4">WTH-A15-04-003</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">TT</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">42TP31.8 300L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">112</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">9</td>
+                <td class="py-3 px-4">WTH-A15-04</td>
+                <td class="py-3 px-4">WTH-A15-04-001</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">DT</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">50.8TP38-150L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">144</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">10</td>
+                <td class="py-3 px-4">WTH-A15-01</td>
+                <td class="py-3 px-4">WTH-A15-01-004</td>
+                <td class="py-3 px-4">Swagging</td>
+                <td class="py-3 px-4">DT</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">44TP36-160L</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">120</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">11</td>
+                <td class="py-3 px-4">WTH-A13-01</td>
+                <td class="py-3 px-4">WTH-A13-01-001</td>
+                <td class="py-3 px-4">Doming</td>
+                <td class="py-3 px-4">CS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">For 13 14</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">1200</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4">12</td>
+                <td class="py-3 px-4">WTH-A13-01</td>
+                <td class="py-3 px-4">WTH-A13-01-001</td>
+                <td class="py-3 px-4">Doming</td>
+                <td class="py-3 px-4">SS</td>
+                <td class="py-3 px-4">
+                  <input type="checkbox" class="items-to-do" />
+                </td>
+                <td class="py-3 px-4">For 13 14</td>
+                <td class="py-3 px-4">1</td>
+                <td class="py-3 px-4 capacity">1200</td>
+                <td class="py-3 px-4 qty">0</td>
+                <td class="py-3 px-4 total-hours">0</td>
+                <td class="py-3 px-4 num-days">0</td>
+              </tr>
+              <tr class="border-b border-gray-200 font-bold">
+                <td class="py-3 px-4" colspan="10">Total</td>
+                <td class="py-3 px-4" id="totalHours">0</td>
+                <td class="py-3 px-4" id="totalDays">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Summaries -->
+      <section class="grid md:grid-cols-2 gap-8 mb-10">
+        <!-- By Part of Frame -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-4">
+          <h2 class="text-xl font-semibold mb-4 text-blue-700">
+            Summary by Part of Frame
+          </h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="py-2 px-4 text-left">Part of Frame</th>
+                  <th class="py-2 px-4 text-left">M/C Function</th>
+                  <th class="py-2 px-4 text-left">Description</th>
+                  <th class="py-2 px-4 text-left">Qty</th>
+                  <th class="py-2 px-4 text-left">Total Hours</th>
+                  <th class="py-2 px-4 text-left">Days</th>
+                </tr>
+              </thead>
+              <tbody id="summaryBody" class="text-gray-700"></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- By Machine -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-4">
+          <h2 class="text-xl font-semibold mb-4 text-blue-700">
+            Summary by Machine
+          </h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="py-2 px-4 text-left">M/C No.</th>
+                  <th class="py-2 px-4 text-left">M/C Function</th>
+                  <th class="py-2 px-4 text-left">Total Hours</th>
+                  <th class="py-2 px-4 text-left">Days</th>
+                </tr>
+              </thead>
+              <tbody id="machineSummaryBody" class="text-gray-700"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Machine Schedule -->
+      <section class="mb-10">
+        <div class="bg-white border border-gray-200 rounded-lg shadow p-4">
+          <h2 class="text-xl font-semibold mb-4 text-blue-700">
+            Machine Schedule
+          </h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="py-2 px-4 text-left">M/C No.</th>
+                  <th class="py-2 px-4 text-left">M/C Function</th>
+                  <th class="py-2 px-4 text-left">Start Date</th>
+                  <th class="py-2 px-4 text-left">End Date</th>
+                </tr>
+              </thead>
+              <tbody id="machineScheduleBody" class="text-gray-700"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Instructions -->
+      <section class="bg-white border border-gray-200 rounded-lg shadow p-6">
+        <div class="flex items-center mb-4">
+          <h2 class="text-xl font-semibold flex-1 text-blue-700">How to Use</h2>
+          <button
+            id="toggleLanguage"
+            class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition"
+          >
+            Switch to Bengali
+          </button>
+        </div>
+        <div id="instructionsEnglish" class="text-gray-700">
+          <ol class="list-decimal ml-6 space-y-1">
+            <li>Enter the order quantity in the "Order Qty" field.</li>
+            <li>Select the working hours per day from the dropdown menu.</li>
+            <li>
+              Check the boxes under "Items to Do" for the parts you want to
+              produce.
+            </li>
+            <li>
+              The table will automatically calculate the quantity, total hours,
+              and number of days required for each selected item.
+            </li>
+            <li>
+              View the production summary by part of frame and by machine,
+              including machine functions, total hours, and days.
+            </li>
+            <li>
+              The machine schedule shows the start date (today) and end date for
+              each machine based on the calculated days.
+            </li>
+            <li>Click "Reset All" to clear all inputs and selections.</li>
+          </ol>
+        </div>
+        <div id="instructionsBengali" class="text-gray-700 hidden">
+          <ol class="list-decimal ml-6 space-y-1">
+            <li>"অর্ডার পরিমাণ" ক্ষেত্রে অর্ডারের পরিমাণ প্রবেশ করুন।</li>
+            <li>ড্রপডাউন মেনু থেকে প্রতিদিনের কাজের ঘণ্টা নির্বাচন করুন।</li>
+            <li>
+              আপনি যে অংশগুলি উৎপাদন করতে চান তার জন্য "করণীয় আইটেম" এর নীচে
+              বাক্সগুলি চেক করুন।
+            </li>
+            <li>
+              টেবিলটি স্বয়ংক্রিয়ভাবে প্রতিটি নির্বাচিত আইটেমের জন্য পরিমাণ,
+              মোট ঘণ্টা এবং প্রয়োজনীয় দিনের সংখ্যা গণনা করবে।
+            </li>
+            <li>
+              ফ্রেমের অংশ এবং মেশিন অনুসারে উৎপাদন সারাংশ দেখুন, যার মধ্যে
+              মেশিনের কার্যাবলী, মোট ঘণ্টা এবং দিন রয়েছে।
+            </li>
+            <li>
+              মেশিনের সময়সূচীতে প্রতিটি মেশিনের জন্য শুরুর তারিখ (আজ) এবং
+              গণনাকৃত দিনের উপর ভিত্তি করে শেষের তারিখ দেখানো হয়।
+            </li>
+            <li>
+              সমস্ত ইনপুট এবং নির্বাচন মুছে ফেলতে "সব রিসেট করুন" ক্লিক করুন।
+            </li>
+          </ol>
+        </div>
+      </section>
+    </div>
+    <script>
+      function updateCalculations() {
+        const orderQty =
+          parseFloat(document.getElementById("orderQty").value) || 0;
+        const workingHours =
+          parseFloat(document.getElementById("workingHours").value) || 8;
+        const rows = document.querySelectorAll(
+          "#productionTable tbody tr:not(:last-child)"
+        );
+        const summaryBody = document.getElementById("summaryBody");
+        const machineSummaryBody =
+          document.getElementById("machineSummaryBody");
+        const machineScheduleBody = document.getElementById(
+          "machineScheduleBody"
+        );
+        let totalHoursSum = 0;
+        const machineData = {};
+
+        summaryBody.innerHTML = "";
+        machineSummaryBody.innerHTML = "";
+        machineScheduleBody.innerHTML = "";
+
+        // Current date (July 9, 2025)
+        const currentDate = new Date(2025, 6, 9);
+
+        rows.forEach((row) => {
+          const checkbox = row.querySelector(".items-to-do");
+          const machineNo = row
+            .querySelector("td:nth-child(2)")
+            .textContent.trim();
+          const mcFunction = row
+            .querySelector("td:nth-child(4)")
+            .textContent.trim();
+          const partOfFrame = row
+            .querySelector("td:nth-child(5)")
+            .textContent.trim();
+          const description = row
+            .querySelector("td:nth-child(7)")
+            .textContent.trim();
+          const capacity =
+            parseFloat(row.querySelector(".capacity").textContent) || 1;
+          const qtyCell = row.querySelector(".qty");
+          const totalHoursCell = row.querySelector(".total-hours");
+          const numDaysCell = row.querySelector(".num-days");
+
+          if (checkbox.checked) {
+            const qty =
+              partOfFrame === "CS" || partOfFrame === "SS"
+                ? orderQty * 2
+                : orderQty;
+            const totalHours = qty / capacity;
+            const numDays = totalHours / workingHours;
+
+            qtyCell.textContent = qty.toFixed(2);
+            totalHoursCell.textContent = totalHours.toFixed(2);
+            numDaysCell.textContent = numDays.toFixed(2);
+            totalHoursSum += totalHours;
+
+            // Add to Part of Frame summary
+            const summaryRow = document.createElement("tr");
+            summaryRow.className = "border-b border-gray-200 hover:bg-gray-50";
+            summaryRow.innerHTML = `
+            <td class="py-2 px-4">${partOfFrame}</td>
+            <td class="py-2 px-4">${mcFunction}</td>
+            <td class="py-2 px-4">${description}</td>
+            <td class="py-2 px-4">${qty.toFixed(2)}</td>
+            <td class="py-2 px-4">${totalHours.toFixed(2)}</td>
+            <td class="py-2 px-4">${numDays.toFixed(2)}</td>
+          `;
+            summaryBody.appendChild(summaryRow);
+
+            // Accumulate machine data
+            if (!machineData[machineNo]) {
+              machineData[machineNo] = { hours: 0, functions: new Set() };
+            }
+            machineData[machineNo].hours += totalHours;
+            machineData[machineNo].functions.add(mcFunction);
+          } else {
+            qtyCell.textContent = "0";
+            totalHoursCell.textContent = "0";
+            numDaysCell.textContent = "0";
+          }
+        });
+
+        // Add to Machine summary and Machine Schedule
+        for (const [machineNo, data] of Object.entries(machineData)) {
+          const numDays = data.hours / workingHours;
+          const functions = Array.from(data.functions).join(", ");
+
+          // Machine Summary
+          const machineRow = document.createElement("tr");
+          machineRow.className = "border-b border-gray-200 hover:bg-gray-50";
+          machineRow.innerHTML = `
+          <td class="py-2 px-4">${machineNo}</td>
+          <td class="py-2 px-4">${functions}</td>
+          <td class="py-2 px-4">${data.hours.toFixed(2)}</td>
+          <td class="py-2 px-4">${numDays.toFixed(2)}</td>
+        `;
+          machineSummaryBody.appendChild(machineRow);
+
+          // Machine Schedule
+          const endDate = new Date(currentDate);
+          endDate.setDate(currentDate.getDate() + Math.ceil(numDays));
+          const formattedStartDate = currentDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+          const formattedEndDate = endDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+
+          const scheduleRow = document.createElement("tr");
+          scheduleRow.className = "border-b border-gray-200 hover:bg-gray-50";
+          scheduleRow.innerHTML = `
+          <td class="py-2 px-4">${machineNo}</td>
+          <td class="py-2 px-4">${functions}</td>
+          <td class="py-2 px-4">${formattedStartDate}</td>
+          <td class="py-2 px-4">${formattedEndDate}</td>
+        `;
+          machineScheduleBody.appendChild(scheduleRow);
+        }
+
+        document.getElementById("totalHours").textContent =
+          totalHoursSum.toFixed(2);
+        document.getElementById("totalDays").textContent = (
+          totalHoursSum / workingHours
+        ).toFixed(2);
+      }
+
+      function resetAll() {
+        document.getElementById("orderQty").value = "";
+        document.getElementById("workingHours").value = "8";
+        document.querySelectorAll(".items-to-do").forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+        updateCalculations();
+      }
+
+      // Toggle language for instructions
+      const toggleButton = document.getElementById("toggleLanguage");
+      const instructionsEnglish = document.getElementById(
+        "instructionsEnglish"
+      );
+      const instructionsBengali = document.getElementById(
+        "instructionsBengali"
+      );
+
+      toggleButton.addEventListener("click", () => {
+        if (instructionsEnglish.classList.contains("hidden")) {
+          instructionsEnglish.classList.remove("hidden");
+          instructionsBengali.classList.add("hidden");
+          toggleButton.textContent = "Switch to Bengali";
+        } else {
+          instructionsEnglish.classList.add("hidden");
+          instructionsBengali.classList.remove("hidden");
+          toggleButton.textContent = "Switch to English";
+        }
+      });
+
+      document
+        .getElementById("orderQty")
+        .addEventListener("input", updateCalculations);
+      document
+        .getElementById("workingHours")
+        .addEventListener("change", updateCalculations);
+      document.querySelectorAll(".items-to-do").forEach((checkbox) => {
+        checkbox.addEventListener("change", updateCalculations);
+      });
+      document
+        .getElementById("resetButton")
+        .addEventListener("click", resetAll);
+    </script>
+  </body>
+</html>
