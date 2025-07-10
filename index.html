@@ -10,329 +10,533 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary: #0ea5e9;
+        --light: #f8fafc;
+        --dark: #1e293b;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        min-height: 100vh;
+      }
+
+      .nav-container {
+        background: linear-gradient(
+          90deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .card {
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .table-container {
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .production-table th {
+        background: linear-gradient(to bottom, #eff6ff, #dbeafe);
+        color: var(--primary-dark);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+
+      .production-table tr:nth-child(even) {
+        background-color: #f8fafc;
+      }
+
+      .summary-title {
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .summary-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--primary);
+        border-radius: 3px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(to right, var(--primary-dark), #0284c7);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-reset {
+        background: linear-gradient(to right, #ef4444, #f87171);
+        transition: all 0.3s ease;
+      }
+
+      .btn-reset:hover {
+        background: linear-gradient(to right, #dc2626, #ef4444);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+      }
+
+      .checkbox-container input[type="checkbox"] {
+        transform: scale(1.3);
+        cursor: pointer;
+      }
+
+      .checkbox-container input[type="checkbox"]:checked {
+        accent-color: var(--primary);
+      }
+
+      @media (max-width: 768px) {
+        .summary-section {
+          grid-template-columns: 1fr;
+        }
+
+        .table-container {
+          overflow-x: auto;
+        }
+
+        .production-table {
+          min-width: 900px;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-gray-100 min-h-screen">
+  <body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="nav-container py-3 px-4 sticky top-0 z-50">
+      <div
+        class="max-w-6xl mx-auto flex flex-wrap items-center justify-between"
+      >
+        <div class="flex items-center">
+          <div class="text-white text-xl font-bold flex items-center">
+            <i class="fas fa-calculator mr-2"></i>
+            Production Calculator
+          </div>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-button"
+          class="md:hidden text-white focus:outline-none"
+        >
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+
+        <!-- Desktop Menu -->
+        <div
+          class="hidden md:flex md:items-center w-full md:w-auto"
+          id="desktop-menu"
+        >
+          <ul class="md:flex md:space-x-6">
+            <li>
+              <a
+                href="https://samantha-web.github.io/navigationhub/"
+                class="text-white hover:bg-blue-700 px-3 py-2 rounded-md transition flex items-center"
+              >
+                <i class="fas fa-home mr-2"></i> Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://samantha-web.github.io/timecaltube/"
+                class="text-white hover:bg-blue-700 px-3 py-2 rounded-md transition flex items-center"
+              >
+                <i class="fas fa-cut mr-2"></i> Cutting
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://samantha-web.github.io/t4/"
+                class="text-white hover:bg-blue-700 px-3 py-2 rounded-md transition flex items-center"
+              >
+                <i class="fas fa-cog mr-2"></i> T4
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://samantha-web.github.io/t6/"
+                class="text-white hover:bg-blue-700 px-3 py-2 rounded-md transition flex items-center"
+              >
+                <i class="fas fa-cogs mr-2"></i> T6
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden px-2 pt-2 pb-3">
+        <ul class="space-y-1">
+          <li>
+            <a
+              href="https://samantha-web.github.io/navigationhub/"
+              class="text-white block px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center"
+            >
+              <i class="fas fa-home mr-2"></i> Home
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://samantha-web.github.io/timecaltube/"
+              class="text-white block px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center"
+            >
+              <i class="fas fa-cut mr-2"></i> Cutting
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://samantha-web.github.io/t4/"
+              class="text-white block px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center"
+            >
+              <i class="fas fa-cog mr-2"></i> T4
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://samantha-web.github.io/t6/"
+              class="text-white block px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center"
+            >
+              <i class="fas fa-cogs mr-2"></i> T6
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
     <div class="max-w-6xl mx-auto p-4 md:p-8">
       <!-- Header -->
-      <header class="mb-8 text-center">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a
-                  class="nav-link"
-                  href="https://samantha-web.github.io/navigationhub/"
-                  >Back to Home <span class="sr-only">(current)</span></a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  href="https://samantha-web.github.io/timecaltube/"
-                  >Cutting</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="https://samantha-web.github.io/t4/"
-                  >T4</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link disabled"
-                  href="https://samantha-web.github.io/t6/"
-                  >T6</a
-                >
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <h1 class="text-4xl font-extrabold text-blue-800 mb-2">
+      <header class="mb-8 text-center py-6">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-800 mb-3">
           Swagging & Doming Production Time Calculator
         </h1>
-        <p class="text-gray-600">
-          Easily plan, calculate, and summarize your manufacturing schedule.
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Easily plan, calculate, and summarize your manufacturing schedule with
+          this intuitive tool
         </p>
       </header>
 
       <!-- Controls -->
-      <section
-        class="bg-white rounded-lg shadow p-6 mb-8 flex flex-wrap items-center gap-4"
-      >
-        <div class="flex items-center gap-2">
-          <label for="orderQty" class="font-medium">Order Qty</label>
-          <input
-            type="number"
-            id="orderQty"
-            class="border border-gray-300 p-2 rounded w-24 focus:ring focus:ring-blue-200"
-            min="0"
-          />
-        </div>
-        <div class="flex items-center gap-2">
-          <label for="workingHours" class="font-medium"
-            >Working Hours/Day</label
+      <section class="card bg-white p-6 mb-8">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-col w-full md:w-auto">
+            <label for="orderQty" class="font-medium text-gray-700 mb-1"
+              >Order Quantity</label
+            >
+            <div class="relative">
+              <input
+                type="number"
+                id="orderQty"
+                class="border border-gray-300 p-3 rounded-lg w-full md:w-48 focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
+                min="0"
+                placeholder="Enter quantity"
+              />
+              <div class="absolute right-3 top-3 text-gray-400">
+                <i class="fas fa-box"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col w-full md:w-auto">
+            <label for="workingHours" class="font-medium text-gray-700 mb-1"
+              >Working Hours/Day</label
+            >
+            <div class="relative">
+              <select
+                id="workingHours"
+                class="border border-gray-300 p-3 rounded-lg w-full md:w-48 appearance-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
+              >
+                <option value="8" selected>08 Hours</option>
+                <option value="10">10 Hours</option>
+                <option value="12">12 Hours</option>
+                <option value="14">14 Hours</option>
+                <option value="16">16 Hours</option>
+                <option value="18">18 Hours</option>
+                <option value="20">20 Hours</option>
+                <option value="22">22 Hours</option>
+                <option value="24">24 Hours</option>
+              </select>
+              <div
+                class="absolute right-3 top-3 text-gray-400 pointer-events-none"
+              >
+                <i class="fas fa-clock"></i>
+              </div>
+            </div>
+          </div>
+
+          <button
+            id="resetButton"
+            class="btn-reset text-white px-6 py-3 rounded-lg font-medium transition w-full md:w-auto mt-4 md:mt-0"
           >
-          <select id="workingHours" class="border border-gray-300 p-2 rounded">
-            <option value="8">08 Hours</option>
-            <option value="10">10 Hours</option>
-            <option value="12">12 Hours</option>
-            <option value="14">14 Hours</option>
-            <option value="16">16 Hours</option>
-            <option value="18">18 Hours</option>
-            <option value="20">20 Hours</option>
-            <option value="22">22 Hours</option>
-            <option value="24">24 Hours</option>
-          </select>
+            <i class="fas fa-redo mr-2"></i> Reset All
+          </button>
         </div>
-        <button
-          id="resetButton"
-          class="ml-auto bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition"
-        >
-          Reset All
-        </button>
       </section>
 
       <!-- Production Table -->
       <section class="mb-10">
-        <div class="overflow-x-auto bg-white rounded-lg shadow">
-          <table
-            id="productionTable"
-            class="min-w-full divide-y divide-gray-300"
-          >
-            <thead class="bg-blue-100 sticky top-0 z-10">
-              <tr>
-                <th class="py-3 px-4 text-left">S/No</th>
-                <th class="py-3 px-4 text-left">M/C No.</th>
-                <th class="py-3 px-4 text-left">Mould No.</th>
-                <th class="py-3 px-4 text-left">M/C Function</th>
-                <th class="py-3 px-4 text-left">Part of Frame</th>
-                <th class="py-3 px-4 text-left">Items to Do</th>
-                <th class="py-3 px-4 text-left">Description</th>
-                <th class="py-3 px-4 text-left">Qty (Set)</th>
-                <th class="py-3 px-4 text-left">Capacity/hr</th>
-                <th class="py-3 px-4 text-left">Qty</th>
-                <th class="py-3 px-4 text-left">Total Hours</th>
-                <th class="py-3 px-4 text-left">Days</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 text-sm bg-white">
-              <tr>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4">WTH-A15-01</td>
-                <td class="py-3 px-4">WTH-A15-01-002</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">CS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">22.2TP14-180L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">90</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">2</td>
-                <td class="py-3 px-4">WTH-A15-01</td>
-                <td class="py-3 px-4">WTH-A15-01-007</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">CS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">25.4TP19-160L, 22.2TP14-160L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">144</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">3</td>
-                <td class="py-3 px-4">WTH-A15-01</td>
-                <td class="py-3 px-4">WTH-A15-01-001</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">SS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">19.1TP13-155L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">360</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">4</td>
-                <td class="py-3 px-4">WTH-A15-01</td>
-                <td class="py-3 px-4">WTH-A15-01-003</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">SS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">22.2TP19-160L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">144</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">5</td>
-                <td class="py-3 px-4">WTH-A15-01</td>
-                <td class="py-3 px-4">WTH-A15-01-005</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">SS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">16TP13-130L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">450</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">6</td>
-                <td class="py-3 px-4">WTH-A15-01</td>
-                <td class="py-3 px-4">WTH-A15-01-006</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">SS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">22.2TP16(20L)-60L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">360</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">7</td>
-                <td class="py-3 px-4">WTH-A15-04</td>
-                <td class="py-3 px-4">WTH-A15-04-002</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">TT</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">44TP30-410L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">102</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">8</td>
-                <td class="py-3 px-4">WTH-A15-04</td>
-                <td class="py-3 px-4">WTH-A15-04-003</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">TT</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">42TP31.8 300L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">112</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">9</td>
-                <td class="py-3 px-4">WTH-A15-04</td>
-                <td class="py-3 px-4">WTH-A15-04-001</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">DT</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">50.8TP38-150L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">144</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">10</td>
-                <td class="py-3 px-4">WTH-A15-01</td>
-                <td class="py-3 px-4">WTH-A15-01-004</td>
-                <td class="py-3 px-4">Swagging</td>
-                <td class="py-3 px-4">DT</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">44TP36-160L</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">120</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">11</td>
-                <td class="py-3 px-4">WTH-A13-01</td>
-                <td class="py-3 px-4">WTH-A13-01-001</td>
-                <td class="py-3 px-4">Doming</td>
-                <td class="py-3 px-4">CS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">For 13 14</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">1200</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4">12</td>
-                <td class="py-3 px-4">WTH-A13-01</td>
-                <td class="py-3 px-4">WTH-A13-01-001</td>
-                <td class="py-3 px-4">Doming</td>
-                <td class="py-3 px-4">SS</td>
-                <td class="py-3 px-4">
-                  <input type="checkbox" class="items-to-do" />
-                </td>
-                <td class="py-3 px-4">For 13 14</td>
-                <td class="py-3 px-4">1</td>
-                <td class="py-3 px-4 capacity">1200</td>
-                <td class="py-3 px-4 qty">0</td>
-                <td class="py-3 px-4 total-hours">0</td>
-                <td class="py-3 px-4 num-days">0</td>
-              </tr>
-              <tr class="border-b border-gray-200 font-bold">
-                <td class="py-3 px-4" colspan="10">Total</td>
-                <td class="py-3 px-4" id="totalHours">0</td>
-                <td class="py-3 px-4" id="totalDays">0</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="table-container bg-white shadow">
+          <div class="overflow-x-auto">
+            <table
+              id="productionTable"
+              class="production-table min-w-full divide-y divide-gray-200"
+            >
+              <thead class="bg-blue-50 sticky top-0 z-10">
+                <tr>
+                  <th class="py-3 px-4 text-left">S/No</th>
+                  <th class="py-3 px-4 text-left">M/C No.</th>
+                  <th class="py-3 px-4 text-left">Mould No.</th>
+                  <th class="py-3 px-4 text-left">M/C Function</th>
+                  <th class="py-3 px-4 text-left">Part of Frame</th>
+                  <th class="py-3 px-4 text-left">Items to Do</th>
+                  <th class="py-3 px-4 text-left">Description</th>
+                  <th class="py-3 px-4 text-left">Qty (Set)</th>
+                  <th class="py-3 px-4 text-left">Capacity/hr</th>
+                  <th class="py-3 px-4 text-left">Qty</th>
+                  <th class="py-3 px-4 text-left">Total Hours</th>
+                  <th class="py-3 px-4 text-left">Days</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 text-sm bg-white">
+                <tr>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4">WTH-A15-01</td>
+                  <td class="py-3 px-4">WTH-A15-01-002</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">CS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">22.2TP14-180L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">90</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">2</td>
+                  <td class="py-3 px-4">WTH-A15-01</td>
+                  <td class="py-3 px-4">WTH-A15-01-007</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">CS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">25.4TP19-160L, 22.2TP14-160L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">144</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">3</td>
+                  <td class="py-3 px-4">WTH-A15-01</td>
+                  <td class="py-3 px-4">WTH-A15-01-001</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">SS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">19.1TP13-155L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">360</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">4</td>
+                  <td class="py-3 px-4">WTH-A15-01</td>
+                  <td class="py-3 px-4">WTH-A15-01-003</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">SS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">22.2TP19-160L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">144</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">5</td>
+                  <td class="py-3 px-4">WTH-A15-01</td>
+                  <td class="py-3 px-4">WTH-A15-01-005</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">SS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">16TP13-130L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">450</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">6</td>
+                  <td class="py-3 px-4">WTH-A15-01</td>
+                  <td class="py-3 px-4">WTH-A15-01-006</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">SS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">22.2TP16(20L)-60L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">360</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">7</td>
+                  <td class="py-3 px-4">WTH-A15-04</td>
+                  <td class="py-3 px-4">WTH-A15-04-002</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">TT</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">44TP30-410L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">102</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">8</td>
+                  <td class="py-3 px-4">WTH-A15-04</td>
+                  <td class="py-3 px-4">WTH-A15-04-003</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">TT</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">42TP31.8 300L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">112</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">9</td>
+                  <td class="py-3 px-4">WTH-A15-04</td>
+                  <td class="py-3 px-4">WTH-A15-04-001</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">DT</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">50.8TP38-150L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">144</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">10</td>
+                  <td class="py-3 px-4">WTH-A15-01</td>
+                  <td class="py-3 px-4">WTH-A15-01-004</td>
+                  <td class="py-3 px-4">Swagging</td>
+                  <td class="py-3 px-4">DT</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">44TP36-160L</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">120</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">11</td>
+                  <td class="py-3 px-4">WTH-A13-01</td>
+                  <td class="py-3 px-4">WTH-A13-01-001</td>
+                  <td class="py-3 px-4">Doming</td>
+                  <td class="py-3 px-4">CS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">For 13 14</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">1200</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">12</td>
+                  <td class="py-3 px-4">WTH-A13-01</td>
+                  <td class="py-3 px-4">WTH-A13-01-001</td>
+                  <td class="py-3 px-4">Doming</td>
+                  <td class="py-3 px-4">SS</td>
+                  <td class="py-3 px-4 checkbox-container">
+                    <input type="checkbox" class="items-to-do" />
+                  </td>
+                  <td class="py-3 px-4">For 13 14</td>
+                  <td class="py-3 px-4">1</td>
+                  <td class="py-3 px-4 capacity">1200</td>
+                  <td class="py-3 px-4 qty">0</td>
+                  <td class="py-3 px-4 total-hours">0</td>
+                  <td class="py-3 px-4 num-days">0</td>
+                </tr>
+                <tr class="font-bold bg-blue-50">
+                  <td class="py-3 px-4" colspan="10">Total</td>
+                  <td class="py-3 px-4" id="totalHours">0</td>
+                  <td class="py-3 px-4" id="totalDays">0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
       <!-- Summaries -->
-      <section class="grid md:grid-cols-2 gap-8 mb-10">
+      <section class="grid md:grid-cols-2 gap-8 mb-10 summary-section">
         <!-- By Part of Frame -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow p-4">
-          <h2 class="text-xl font-semibold mb-4 text-blue-700">
+        <div class="card bg-white p-6">
+          <h2 class="summary-title text-xl font-semibold mb-6 text-blue-800">
             Summary by Part of Frame
           </h2>
           <div class="overflow-x-auto">
             <table class="min-w-full">
               <thead>
-                <tr class="bg-gray-100">
+                <tr class="bg-blue-50">
                   <th class="py-2 px-4 text-left">Part of Frame</th>
                   <th class="py-2 px-4 text-left">M/C Function</th>
                   <th class="py-2 px-4 text-left">Description</th>
@@ -346,14 +550,14 @@
           </div>
         </div>
         <!-- By Machine -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow p-4">
-          <h2 class="text-xl font-semibold mb-4 text-blue-700">
+        <div class="card bg-white p-6">
+          <h2 class="summary-title text-xl font-semibold mb-6 text-blue-800">
             Summary by Machine
           </h2>
           <div class="overflow-x-auto">
             <table class="min-w-full">
               <thead>
-                <tr class="bg-gray-100">
+                <tr class="bg-blue-50">
                   <th class="py-2 px-4 text-left">M/C No.</th>
                   <th class="py-2 px-4 text-left">M/C Function</th>
                   <th class="py-2 px-4 text-left">Total Hours</th>
@@ -368,14 +572,14 @@
 
       <!-- Machine Schedule -->
       <section class="mb-10">
-        <div class="bg-white border border-gray-200 rounded-lg shadow p-4">
-          <h2 class="text-xl font-semibold mb-4 text-blue-700">
+        <div class="card bg-white p-6">
+          <h2 class="summary-title text-xl font-semibold mb-6 text-blue-800">
             Machine Schedule
           </h2>
           <div class="overflow-x-auto">
             <table class="min-w-full">
               <thead>
-                <tr class="bg-gray-100">
+                <tr class="bg-blue-50">
                   <th class="py-2 px-4 text-left">M/C No.</th>
                   <th class="py-2 px-4 text-left">M/C Function</th>
                   <th class="py-2 px-4 text-left">Start Date</th>
@@ -389,19 +593,21 @@
       </section>
 
       <!-- Instructions -->
-      <section class="bg-white border border-gray-200 rounded-lg shadow p-6">
-        <div class="flex items-center mb-4">
-          <h2 class="text-xl font-semibold flex-1 text-blue-700">How to Use</h2>
+      <section class="card bg-white p-6">
+        <div class="flex flex-wrap items-center mb-4">
+          <h2 class="text-xl font-semibold flex-1 text-blue-800 mb-4 md:mb-0">
+            How to Use the Calculator
+          </h2>
           <button
             id="toggleLanguage"
-            class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition"
+            class="btn-primary text-white px-4 py-2 rounded-lg font-medium transition"
           >
-            Switch to Bengali
+            <i class="fas fa-language mr-2"></i> Switch to Bengali
           </button>
         </div>
         <div id="instructionsEnglish" class="text-gray-700">
-          <ol class="list-decimal ml-6 space-y-1">
-            <li>Enter the order quantity in the "Order Qty" field.</li>
+          <ol class="list-decimal ml-6 space-y-2">
+            <li>Enter the order quantity in the "Order Quantity" field.</li>
             <li>Select the working hours per day from the dropdown menu.</li>
             <li>
               Check the boxes under "Items to Do" for the parts you want to
@@ -423,7 +629,7 @@
           </ol>
         </div>
         <div id="instructionsBengali" class="text-gray-700 hidden">
-          <ol class="list-decimal ml-6 space-y-1">
+          <ol class="list-decimal ml-6 space-y-2">
             <li>"অর্ডার পরিমাণ" ক্ষেত্রে অর্ডারের পরিমাণ প্রবেশ করুন।</li>
             <li>ড্রপডাউন মেনু থেকে প্রতিদিনের কাজের ঘণ্টা নির্বাচন করুন।</li>
             <li>
@@ -450,11 +656,20 @@
       </section>
     </div>
     <script>
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+
+      mobileMenuButton.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      // Production calculation functions
       function updateCalculations() {
         const orderQty =
           parseFloat(document.getElementById("orderQty").value) || 0;
         const workingHours =
-          parseFloat(document.getElementById("workingHours").value) || 8;
+          parseFloat(document.getElementById("workingHours").value) || 12;
         const rows = document.querySelectorAll(
           "#productionTable tbody tr:not(:last-child)"
         );
@@ -471,8 +686,8 @@
         machineSummaryBody.innerHTML = "";
         machineScheduleBody.innerHTML = "";
 
-        // Current date (July 9, 2025)
-        const currentDate = new Date(2025, 6, 9);
+        // Current date (July 11, 2025)
+        const currentDate = new Date(2025, 6, 11);
 
         rows.forEach((row) => {
           const checkbox = row.querySelector(".items-to-do");
@@ -603,14 +818,17 @@
         if (instructionsEnglish.classList.contains("hidden")) {
           instructionsEnglish.classList.remove("hidden");
           instructionsBengali.classList.add("hidden");
-          toggleButton.textContent = "Switch to Bengali";
+          toggleButton.innerHTML =
+            '<i class="fas fa-language mr-2"></i> Switch to Bengali';
         } else {
           instructionsEnglish.classList.add("hidden");
           instructionsBengali.classList.remove("hidden");
-          toggleButton.textContent = "Switch to English";
+          toggleButton.innerHTML =
+            '<i class="fas fa-language mr-2"></i> Switch to English';
         }
       });
 
+      // Initialize event listeners
       document
         .getElementById("orderQty")
         .addEventListener("input", updateCalculations);
@@ -623,6 +841,9 @@
       document
         .getElementById("resetButton")
         .addEventListener("click", resetAll);
+
+      // Initialize calculations
+      updateCalculations();
     </script>
   </body>
 </html>
