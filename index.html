@@ -285,6 +285,41 @@
             </div>
           </div>
 
+          <div class="flex flex-col w-full md:w-auto">
+            <label for="startDate" class="font-medium text-gray-700 mb-1"
+              >Start Date</label
+            >
+            <div class="relative">
+              <input
+                type="date"
+                id="startDate"
+                class="border border-gray-300 p-3 rounded-lg w-full md:w-48 focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
+              />
+              <div class="absolute right-3 top-3 text-gray-400 pointer-events-none">
+                <i class="fas fa-calendar"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col w-full md:w-auto">
+            <label for="holidays" class="font-medium text-gray-700 mb-1"
+              >Holidays (Fridays will be auto-counted)</label
+            >
+            <div class="relative">
+              <input
+                type="number"
+                id="holidays"
+                class="border border-gray-300 p-3 rounded-lg w-full md:w-48 focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
+                min="0"
+                placeholder="Enter holidays"
+                value="0"
+              />
+              <div class="absolute right-3 top-3 text-gray-400">
+                <i class="fas fa-umbrella-beach"></i>
+              </div>
+            </div>
+          </div>
+
           <button
             id="resetButton"
             class="btn-reset text-white px-6 py-3 rounded-lg font-medium transition w-full md:w-auto mt-4 md:mt-0"
@@ -581,6 +616,10 @@
                   <th class="py-2 px-4 text-left">M/C No.</th>
                   <th class="py-2 px-4 text-left">M/C Function</th>
                   <th class="py-2 px-4 text-left">Start Date</th>
+                  <th class="py-2 px-4 text-left">Required Days</th>
+                  <th class="py-2 px-4 text-left">Holidays</th>
+                  <th class="py-2 px-4 text-left">Fridays</th>
+                  <th class="py-2 px-4 text-left">Total Days</th>
                   <th class="py-2 px-4 text-left">End Date</th>
                 </tr>
               </thead>
@@ -663,11 +702,31 @@
       });
 
       // Production calculation functions
+      function countFridaysInRange(startDate, endDate) {
+        let count = 0;
+        let current = new Date(startDate);
+        
+        while (current <= endDate) {
+          if (current.getDay() === 5) { // Friday is day 5
+            count++;
+          }
+          current.setDate(current.getDate() + 1);
+        }
+        
+        return count;
+      }
+
       function updateCalculations() {
         const orderQty =
           parseFloat(document.getElementById("orderQty").value) || 0;
         const workingHours =
           parseFloat(document.getElementById("workingHours").value) || 8;
+        const startDateInput = document.getElementById("startDate").value;
+        const userHolidays = parseFloat(document.getElementById("holidays").value) || 0;
+        
+        // Set default start date to today if not provided
+        const startDate = startDateInput ? new Date(startDateInput) : new Date();
+        
         const rows = document.querySelectorAll(
           "#productionTable tbody tr:not(:last-child)"
         );
@@ -683,9 +742,6 @@
         summaryBody.innerHTML = "";
         machineSummaryBody.innerHTML = "";
         machineScheduleBody.innerHTML = "";
-
-        // Current date (today's date)
-        const currentDate = new Date();
 
         rows.forEach((row) => {
           const checkbox = row.querySelector(".items-to-do");
@@ -748,7 +804,7 @@
 
         // Add to Machine summary and Machine Schedule
         for (const [machineNo, data] of Object.entries(machineData)) {
-          const numDays = data.hours / workingHours;
+          const requiredDays = Math.ceil(data.hours / workingHours);
           const functions = Array.from(data.functions).join(", ");
 
           // Machine Summary
@@ -758,19 +814,29 @@
           <td class="py-2 px-4">${machineNo}</td>
           <td class="py-2 px-4">${functions}</td>
           <td class="py-2 px-4">${data.hours.toFixed(2)}</td>
-          <td class="py-2 px-4">${numDays.toFixed(2)}</td>
+          <td class="py-2 px-4">${(data.hours / workingHours).toFixed(2)}</td>
         `;
           machineSummaryBody.appendChild(machineRow);
 
-          // Machine Schedule
-          const endDate = new Date(currentDate);
-          endDate.setDate(currentDate.getDate() + Math.ceil(numDays));
-          const formattedStartDate = currentDate.toLocaleDateString("en-US", {
+          // Machine Schedule with holiday calculations
+          // First calculate end date without holidays to count Fridays
+          const tempEndDate = new Date(startDate);
+          tempEndDate.setDate(startDate.getDate() + requiredDays);
+          
+          // Count Fridays in the working period
+          const fridaysInPeriod = countFridaysInRange(startDate, tempEndDate);
+          
+          // Calculate final end date including holidays and Fridays
+          const totalDaysOff = userHolidays + fridaysInPeriod;
+          const finalEndDate = new Date(startDate);
+          finalEndDate.setDate(startDate.getDate() + requiredDays + totalDaysOff);
+          
+          const formattedStartDate = startDate.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
             day: "numeric",
           });
-          const formattedEndDate = endDate.toLocaleDateString("en-US", {
+          const formattedEndDate = finalEndDate.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
             day: "numeric",
@@ -782,6 +848,10 @@
           <td class="py-2 px-4">${machineNo}</td>
           <td class="py-2 px-4">${functions}</td>
           <td class="py-2 px-4">${formattedStartDate}</td>
+          <td class="py-2 px-4">${requiredDays}</td>
+          <td class="py-2 px-4">${userHolidays}</td>
+          <td class="py-2 px-4">${fridaysInPeriod}</td>
+          <td class="py-2 px-4">${requiredDays + totalDaysOff}</td>
           <td class="py-2 px-4">${formattedEndDate}</td>
         `;
           machineScheduleBody.appendChild(scheduleRow);
@@ -797,6 +867,8 @@
       function resetAll() {
         document.getElementById("orderQty").value = "";
         document.getElementById("workingHours").value = "8";
+        document.getElementById("startDate").value = "";
+        document.getElementById("holidays").value = "0";
         document.querySelectorAll(".items-to-do").forEach((checkbox) => {
           checkbox.checked = false;
         });
@@ -833,12 +905,21 @@
       document
         .getElementById("workingHours")
         .addEventListener("change", updateCalculations);
+      document
+        .getElementById("startDate")
+        .addEventListener("change", updateCalculations);
+      document
+        .getElementById("holidays")
+        .addEventListener("input", updateCalculations);
       document.querySelectorAll(".items-to-do").forEach((checkbox) => {
         checkbox.addEventListener("change", updateCalculations);
       });
       document
         .getElementById("resetButton")
         .addEventListener("click", resetAll);
+
+      // Set default start date to today
+      document.getElementById("startDate").value = new Date().toISOString().split('T')[0];
 
       // Initialize calculations
       updateCalculations();
