@@ -113,10 +113,6 @@
       }
 
       @media (max-width: 768px) {
-        .summary-section {
-          grid-template-columns: 1fr;
-        }
-
         .table-container {
           overflow-x: auto;
         }
@@ -526,9 +522,8 @@
         </div>
       </section>
 
-      <!-- Summaries -->
-      <section class="grid md:grid-cols-2 gap-8 mb-10 summary-section">
-        <!-- By Part of Frame -->
+      <!-- Summary by Part of Frame - Full Width -->
+      <section class="mb-10">
         <div class="card bg-white p-6">
           <h2 class="summary-title text-xl font-semibold mb-6 text-blue-800">
             Summary by Part of Frame
@@ -549,7 +544,10 @@
             </table>
           </div>
         </div>
-        <!-- By Machine -->
+      </section>
+
+      <!-- Summary by Machine - Full Width -->
+      <section class="mb-10">
         <div class="card bg-white p-6">
           <h2 class="summary-title text-xl font-semibold mb-6 text-blue-800">
             Summary by Machine
@@ -570,7 +568,7 @@
         </div>
       </section>
 
-      <!-- Machine Schedule -->
+      <!-- Machine Schedule - Full Width -->
       <section class="mb-10">
         <div class="card bg-white p-6">
           <h2 class="summary-title text-xl font-semibold mb-6 text-blue-800">
@@ -669,7 +667,7 @@
         const orderQty =
           parseFloat(document.getElementById("orderQty").value) || 0;
         const workingHours =
-          parseFloat(document.getElementById("workingHours").value) || 12;
+          parseFloat(document.getElementById("workingHours").value) || 8;
         const rows = document.querySelectorAll(
           "#productionTable tbody tr:not(:last-child)"
         );
@@ -686,8 +684,8 @@
         machineSummaryBody.innerHTML = "";
         machineScheduleBody.innerHTML = "";
 
-        // Current date (July 11, 2025)
-        const currentDate = new Date(2025, 6, 11);
+        // Current date (today's date)
+        const currentDate = new Date();
 
         rows.forEach((row) => {
           const checkbox = row.querySelector(".items-to-do");
